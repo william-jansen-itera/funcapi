@@ -12,7 +12,6 @@ on:
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '22.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
-
 jobs:
   build:
     runs-on: windows-latest
@@ -22,6 +21,24 @@ jobs:
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cleanup files and folders as per .funcignore
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force .git
+          Remove-Item -Force .gitignore
+          Remove-Item -Recurse -Force .vscode
+          Remove-Item -Force local.settings.json
+          Remove-Item -Recurse -Force test
+          Remove-Item -Force getting_started.md
+          Remove-Item -Recurse -Force node_modules/@types
+          Remove-Item -Recurse -Force node_modules/azure-functions-core-tools
+          Remove-Item -Recurse -Force node_modules/typescript
+          Get-ChildItem -Path . -Filter *.js.map -Recurse | Remove-Item -Force
+          Get-ChildItem -Path . -Filter *.ts -Recurse | Remove-Item -Force
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
