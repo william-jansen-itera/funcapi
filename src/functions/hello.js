@@ -30,6 +30,11 @@ app.http('hello', {
         // Log all headers for debugging
         
         context.log('Full request:', JSON.stringify(request, null, 2));
+        context.log('headers:', request.headers);
+        const headers = Object.fromEntries(request.headers.entries());
+        context.log('Headers:', headers);
+        context.log('x-test-header:', headers['x-test-header']);
+
         const authHeader = request.headers['authorization'];
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             //return { status: 401, body: 'Missing or invalid Authorization header' };
