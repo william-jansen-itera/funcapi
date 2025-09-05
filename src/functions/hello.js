@@ -8,6 +8,10 @@ app.http('hello', {
 
         const name = request.query.get('name') || await request.text() || 'world';
 
+
+        // Log all headers for debugging
+        context.log('Request headers:', JSON.stringify(request.headers, null, 2));
+
         // Check for Static Web Apps authentication header
         const principalHeader = request.headers["x-ms-client-principal"];
         if (!principalHeader) {
@@ -22,6 +26,6 @@ app.http('hello', {
             return { body: "Header could not be parsed" };
         }
 
-        return { body: `Hello, ${principal.userDetails}!` };
+        return { body: `Hello from func API, ${principal.userDetails}!` };
     }
 });
