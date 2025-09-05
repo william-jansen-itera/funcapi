@@ -32,29 +32,30 @@ app.http('hello', {
         
         const authHeader = request.headers['authorization'];
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return { status: 401, body: 'Missing or invalid Authorization header' };
+            //return { status: 401, body: 'Missing or invalid Authorization header' };
+            return { body: "Missing or invalid Authorization header" };
         }
 
         const token = authHeader.substring(7);
 
         try {
-      const decoded = await new Promise((resolve, reject) => {
-        jwt.verify(token, getKey, {audience: audience, issuer: `https://login.microsoftonline.com/${tenantId}/v2.0`},
-        (err, decoded) => {
-          if (err) reject(err);
-          else resolve(decoded);
-        }
-        );
-      });
+            const decoded = await new Promise((resolve, reject) => {
+                jwt.verify(token, getKey, {audience: audience, issuer: `https://login.microsoftonline.com/${tenantId}/v2.0`},
+                (err, decoded) => {
+                    if (err) reject(err);
+                    else resolve(decoded);
+                });
+            });
 
-      // Log all claims for debugging
-      context.log('JWT claims:', JSON.stringify(decoded, null, 2));
+            // Log all claims for debugging
+            context.log('JWT claims:', JSON.stringify(decoded, null, 2));
 
-      // Token is valid, you can access claims in 'decoded'
-      return { body: `Hello from func API, ${decoded.name || decoded.preferred_username || 'user'}!` };
+            // Token is valid, you can access claims in 'decoded'
+            return { body: `Hello from func API, ${decoded.name || decoded.preferred_username || 'user'}!` };
         } catch (err) {
             context.log('JWT validation error:', err);
-            return { status: 401, body: 'Invalid token' };
+            return { body: "Invalid token" };
+            //return { status: 401, body: 'Invalid token' };
         }
     }
 });
