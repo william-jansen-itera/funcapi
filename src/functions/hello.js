@@ -39,7 +39,8 @@ app.http('hello', {
         }
 
         const token = authHeader.substring(7);
-
+        context.log('token:', token);
+        
         try {
             const decoded = await new Promise((resolve, reject) => {
                 jwt.verify(token, getKey, {audience: audience, issuer: `https://login.microsoftonline.com/${tenantId}/v2.0`},
