@@ -29,13 +29,10 @@ app.http('hello', {
         // const name = request.query.get('name') || await request.text() || 'world';
         // Log all headers for debugging
         
-        context.log('Full request:', JSON.stringify(request, null, 2));
-        context.log('headers:', request.headers);
         const headers = Object.fromEntries(request.headers.entries());
-        context.log('Headers:', headers);
-        context.log('x-test-header:', headers['x-test-header']);
+        context.log('Authorization:', headers['authorization']);
 
-        const authHeader = request.headers['authorization'];
+        const authHeader = headers['authorization'];
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             //return { status: 401, body: 'Missing or invalid Authorization header' };
             return { body: "Missing or invalid Authorization header" };
